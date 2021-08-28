@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">FindMyFlorist</string>
+    <string name="hello_world">Hello Square World!</string>
+    <string name="enter_text">Enter text</string>
+    <string name="clear_text_button">Clear text button</string>
+    <string name="login">Login</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="email">Email:</string>
+    <string name="password">Password:</string>
+    <string name="sign_up">Sign up</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="name">Name:</string>
+    <string name="enter_name">Enter name</string>
+    <string name="re_password">Re-Password</string>
+    <string name="register">Register</string>
+    <string name="registration">Registration</string>
+    <string name="recover_password">Recover password</string>
+    <string name="please_enter_your_email">Please enter your email</string>
+    <string name="email_sent">Please check your email</string>
+    <string name="continue_with_email">Continue with Email</string>
+    <string name="continue_with_fingerprint">Continue with Fingerprint</string>
+    <string name="logo">Logo</string>
+</resources>
