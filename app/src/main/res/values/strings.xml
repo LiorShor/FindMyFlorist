@@ -21,4 +21,10 @@
     <string name="continue_with_email">Continue with Email</string>
     <string name="continue_with_fingerprint">Continue with Fingerprint</string>
     <string name="logo">Logo</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="address">Address</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorite_button">Favorite button</string>
 </resources>
