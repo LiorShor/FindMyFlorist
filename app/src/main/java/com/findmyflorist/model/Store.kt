@@ -13,7 +13,7 @@ class Store(
 ) {
 
     val storeID: String = UUID.randomUUID().toString()
-    val location = Location(iLatitudeDistance, iLongitudeDistance)
+    val location = SelfLocation(iLatitudeDistance, iLongitudeDistance)
 
     val AVERAGE_RADIUS_OF_EARTH_KM = 6371.0
     fun calculateDistanceInKilometer(

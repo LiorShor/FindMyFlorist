@@ -107,7 +107,7 @@ class Login(context: Context) : ConstraintLayout(context) {
                     )
                     .commitNow()
             }, {
-                Log.d("Error", "signIn: ")
+                Log.d("Error", "signIn: check if server is up")
             })
         requestQueue?.add(stringReq)
     }

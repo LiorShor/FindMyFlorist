@@ -1,4 +1,4 @@
 package com.findmyflorist.model
 
-class Location (val latitudeDistance: Double,val longitudeDistance: Double) {
+class SelfLocation (var latitudeDistance: Double, var longitudeDistance: Double) {
 }
