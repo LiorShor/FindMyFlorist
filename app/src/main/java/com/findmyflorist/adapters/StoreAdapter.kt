@@ -27,7 +27,7 @@ class StoreAdapter(private val storesList: ArrayList<Store>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.shopTitle.text = storesList[position].storeName
         holder.isShopOpen.text = storesList[position].isOpen
-        //holder.shopDistance.text = storesList[position].distance.toString() TODO
+        holder.shopDistance.text = storesList[position].storeDistanceFromUser.toString()
         if (storesList[position].isFavorite) {
             holder.shopFavorite.setImageResource(R.drawable.ic_in_favorite)
         } else {

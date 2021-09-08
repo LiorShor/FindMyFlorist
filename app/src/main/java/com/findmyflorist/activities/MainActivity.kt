@@ -1,97 +1,57 @@
 package com.findmyflorist.activities
 
-import android.content.Context
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.biometric.BiometricPrompt
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
+import com.example.textrecognition.view.fragments.ICommunicator
+import com.findmyflorist.R
 import com.findmyflorist.databinding.ActivityMainBinding
-import com.findmyflorist.dialogs.Login
-import java.util.concurrent.Executor
+import com.findmyflorist.fragments.RequestLocationPermissionsFragment
+import com.findmyflorist.fragments.StoreSearch
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var executor: Executor
-    private lateinit var biometricPrompt: BiometricPrompt
-    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+class MainActivity : AppCompatActivity(),ICommunicator {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (applicationContext.let {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } !=
+            PackageManager.PERMISSION_GRANTED) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, RequestLocationPermissionsFragment()).commit()
+        } else {
+            changeFragmentToStoreSearch()
+        }
     }
-
-    fun executeLoginWithEmail() {
-        Login(this)
-/*        prefs = this.getPreferences(Context.MODE_PRIVATE)
-        val editor = prefs?.edit()
-        editor?.putBoolean("Fingerprint", false)
-        editor?.apply()*/
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (applicationContext.let {
+                        ContextCompat.checkSelfPermission(
+                            it,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                    } == PackageManager.PERMISSION_GRANTED
+                ) {
+                    changeFragmentToStoreSearch()
+                }
+            } else {
+                Toast.makeText(applicationContext, "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
-
-    fun executeLoginWithFingerprint() {
-     //   prefs = this.getPreferences(Context.MODE_PRIVATE)
-        executor = ContextCompat.getMainExecutor(this)
-        biometricPrompt = BiometricPrompt(
-                this,
-                executor,
-                object : BiometricPrompt.AuthenticationCallback() {
-
-/*                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                        super.onAuthenticationSucceeded(result)
-*//*                        binding.loginBT.visibility = View.INVISIBLE
-                        binding.fingerPrintBT.visibility = View.INVISIBLE
-                        val editor = prefs?.edit()
-                        editor?.putBoolean("Fingerprint", true)
-                        editor?.apply()*//*
-                        supportFragmentManager.beginTransaction()
-                                .replace(
-                                        R.id.container,
-                                        ImageAnalysisFragment()
-
-                                )
-                                .commitNow()
-                    }*/
-                })
-
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login")
-                .setSubtitle("Log in using biometric fingerprint")
-                .setNegativeButtonText("Close")
-                .build()
-        biometricPrompt.authenticate(promptInfo)
-    }
-
-    fun executeLoginWithEmail(view: android.view.View) {
-        Login(this)
-    }
-
-    /* fun getUsers() {
-         // Instantiate the RequestQueue.
-         val queue = Volley.newRequestQueue(this)
-         val url: String = "https://api.github.com/search/users?q=eyehunt"
-
-         // Request a string response from the provided URL.
-         val stringReq = StringRequest(
-             Request.Method.GET, url,
-             { response ->
-
-                 var strResp = response.toString()
-                 val jsonObj: JSONObject = JSONObject(strResp)
-                 val jsonArray: JSONArray = jsonObj.getJSONArray("items")
-                 var str_user: String = ""
-                 for (i in 0 until jsonArray.length()) {
-                     var jsonInner: JSONObject = jsonArray.getJSONObject(i)
-                     str_user = str_user + "\n" + jsonInner.get("login")
-                 }
-                 textView!!.text = "response : $str_user "
-             },
-             { textView!!.text = "That didn't work!" })
-         queue.add(stringReq)
-     }*/
 
     companion object {
         const val EMAIL = "Email"
@@ -100,6 +60,14 @@ class MainActivity : AppCompatActivity() {
         const val FULLNAME = "FullName"
         const val ADDRESS = "Address"
 
+    }
+
+    override fun changeFragmentWithData(userName: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun changeFragmentToStoreSearch() {
+        supportFragmentManager.beginTransaction().replace(R.id.container, StoreSearch()).commit()
     }
 
 }

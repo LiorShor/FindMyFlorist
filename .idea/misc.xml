@@ -3,11 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/drawable/background.xml" value="0.17407407407407408" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/drawable/buttondesign.xml" value="0.17407407407407408" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/drawable/ic_locationbackground.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/drawable/ic_not_in_favorite.xml" value="0.2171875" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/activity_main.xml" value="0.14" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/dialog_login.xml" value="0.33" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/dialog_register.xml" value="0.33" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_request_location_permissions.xml" value="0.18" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_store_search.xml" value="0.33" />
-        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/row.xml" value="0.22" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/row.xml" value="0.5" />
       </map>
     </option>
   </component>
