@@ -13,7 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.findmyflorist.VolleySingleton
 import com.findmyflorist.activities.MainActivity.Companion.ADDRESS
 import com.findmyflorist.activities.MainActivity.Companion.EMAIL
-import com.findmyflorist.activities.MainActivity.Companion.FULLNAME
+import com.findmyflorist.activities.MainActivity.Companion.FULL_NAME
 import com.findmyflorist.activities.MainActivity.Companion.PASSWORD
 import com.findmyflorist.activities.MainActivity.Companion.USERID
 import com.findmyflorist.databinding.DialogRegisterBinding
@@ -118,7 +118,7 @@ class Register(context: Context) : ConstraintLayout(context) {
         val bundle = Bundle()
         val userCredentialsJSON = JSONObject()
         userCredentialsJSON.put(USERID, UUID.randomUUID())
-        userCredentialsJSON.put(FULLNAME, fullName)
+        userCredentialsJSON.put(FULL_NAME, fullName)
         userCredentialsJSON.put(EMAIL, emailAddress)
         userCredentialsJSON.put(PASSWORD, password)
         userCredentialsJSON.put(ADDRESS, address)

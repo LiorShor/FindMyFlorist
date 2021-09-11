@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+
     tools:context=".fragments.StoreSearch">
 
     <androidx.appcompat.widget.SearchView
@@ -12,11 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
+        android:background="#85FFFFFF"
+        app:circularflow_radiusInDP="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:circularflow_radiusInDP="40dp"
-        android:background="#85FFFFFF"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/storesRecyclerView"

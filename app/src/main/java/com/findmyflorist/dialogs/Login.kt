@@ -15,7 +15,9 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.findmyflorist.R
 import com.findmyflorist.VolleySingleton
 import com.findmyflorist.activities.MainActivity.Companion.EMAIL
+import com.findmyflorist.activities.MainActivity.Companion.FULL_NAME
 import com.findmyflorist.activities.MainActivity.Companion.PASSWORD
+import com.findmyflorist.activities.MainActivity.Companion.user
 import com.findmyflorist.fragments.StoreSearch
 import org.json.JSONObject
 
@@ -87,8 +89,6 @@ class Login(context: Context) : ConstraintLayout(context) {
     }
 
     private fun signIn(emailAddress: String, password: String, context: Context) {
-        val bundle = Bundle()
-        val newFragment = StoreSearch()
         val userCredentialsJSON = JSONObject()
         userCredentialsJSON.put(EMAIL, emailAddress)
         userCredentialsJSON.put(PASSWORD, password)
@@ -97,15 +97,14 @@ class Login(context: Context) : ConstraintLayout(context) {
         val stringReq = JsonObjectRequest(
             Request.Method.POST, url, userCredentialsJSON, { response ->
                 Log.d("VolleySucceedSignIn", response.toString())
-                bundle.putString(EMAIL, emailAddress)
-                bundle.putString(PASSWORD, password)
-                newFragment.arguments = bundle
-                (context as FragmentActivity).supportFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.container,
-                        newFragment
-                    )
-                    .commitNow()
+                if(response.getBoolean("succeed")) {
+                    user.fullName = "Hello " + response.getString("message")
+                    mLoginDialog.dismiss()
+                }
+                else{
+                    mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
+                    mBinding.editTextPassword.setHintTextColor(Color.RED)
+                }
             }, {
                 Log.d("Error", "signIn: check if server is up")
             })

@@ -8,4 +8,7 @@ interface ICommunicator {
     )
 
     fun changeFragmentToStoreSearch()
+    fun changeFragmentToFavorites()
+    fun changeFragmentToAboutUs()
+    fun changeFragmentToStoreDetails()
 }

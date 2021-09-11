@@ -29,29 +29,29 @@ import java.lang.Exception
 import kotlin.math.*
 
 class StoreSearch : Fragment() {
-    private lateinit var communicator: ICommunicator
-    private lateinit var binding: FragmentStoreSearchBinding
-    private lateinit var storesList: ArrayList<Store>
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var selfLocation: SelfLocation
+    private lateinit var mCommunicator: ICommunicator
+    private lateinit var mBinding: FragmentStoreSearchBinding
+    private lateinit var mStoresList: ArrayList<Store>
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var mSelfLocation: SelfLocation
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         if (context?.let {
                 ContextCompat.checkSelfPermission(
                     it,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
             } == PackageManager.PERMISSION_GRANTED)
-            fusedLocationClient.lastLocation
+            mFusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     if (location != null) {
-                        selfLocation = SelfLocation(location.latitude, location.longitude)
+                        mSelfLocation = SelfLocation(location.latitude, location.longitude)
                         //fetchStores(selfLocation) TODO: Uncomment when app ready (DELETE the two next lines)
-                        storesList = ArrayList()
-                        storesList.add(
+                        mStoresList = ArrayList()
+                        mStoresList.add(
                             Store(
                                 "DUMMY",
                                 "Store name",
@@ -64,18 +64,23 @@ class StoreSearch : Fragment() {
                                 false
                             )
                         )
+                        setUpRecyclerView()
                     }
                 }.addOnFailureListener { exception: Exception ->
                     Log.d("Error", exception.toString())
                 }
         inflater.inflate(R.layout.fragment_store_search, container, false)
-        binding = FragmentStoreSearchBinding.inflate(inflater, container, false)
-        communicator = activity as ICommunicator
-        return binding.root
+        mBinding = FragmentStoreSearchBinding.inflate(inflater, container, false)
+        mCommunicator = activity as ICommunicator
+        return mBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun fetchStores(selfLocation: SelfLocation) {
-        storesList = ArrayList()
+        mStoresList = ArrayList()
         val userCredentialsJSON = JSONObject()
         val requestQueue: RequestQueue? =
             context?.let { VolleySingleton.getInstance(it)?.requestQueue }
@@ -119,7 +124,7 @@ class StoreSearch : Fragment() {
                         storeIsOpen,
                         storeDistanceFromUser
                     )
-                    storesList.add(store)
+                    mStoresList.add(store)
                 }
                 setUpRecyclerView()
             }, {
@@ -153,10 +158,8 @@ class StoreSearch : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        binding.storesRecyclerView.adapter = StoreAdapter(storesList)
-        binding.storesRecyclerView.layoutManager = LinearLayoutManager(context)
-        //val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(taskAdapter, getContext()))
-        //itemTouchHelper.attachToRecyclerView(recyclerView)
+        mBinding.storesRecyclerView.adapter = StoreAdapter(mStoresList)
+        mBinding.storesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     companion object {
