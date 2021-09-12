@@ -13,42 +13,70 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="177dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="177dp"
         android:text="@string/store_title"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
 
     <ImageButton
-        android:id="@+id/button"
+        android:id="@+id/wazeButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        app:circularflow_radiusInDP="45dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="28dp"
-        android:padding="10dp"
-        android:src="@drawable/ic_waze"
-        android:scaleType="fitCenter"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/round_corners_button"
         android:backgroundTint="#BDD1AE"
+        android:padding="15dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_waze"
+        app:circularflow_radiusInDP="45dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/phoneButton"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:tint="@color/white" />
 
     <ImageButton
-        android:id="@+id/button4"
+        android:id="@+id/phoneButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/round_corners_button"
         android:backgroundTint="#BDD1AE"
         android:src="@drawable/ic_phone"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/wazeButton"
+        app:layout_constraintStart_toEndOf="@+id/websiteButton"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageButton
+        android:id="@+id/websiteButton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/round_corners_button"
+        android:backgroundTint="#BDD1AE"
+        android:src="@drawable/ic_web"
+        app:layout_constraintEnd_toStartOf="@+id/phoneButton"
+        app:layout_constraintStart_toEndOf="@+id/favoriteButton"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageButton
+        android:id="@+id/favoriteButton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/round_corners_button"
+        android:backgroundTint="#BDD1AE"
+        android:src="@drawable/ic_in_favorite"
+        app:layout_constraintEnd_toStartOf="@+id/websiteButton"
+        app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -56,17 +84,28 @@
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
-        android:layout_width="408dp"
-        android:layout_height="174dp"
+        android:layout_width="match_parent"
+        android:layout_height="205dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

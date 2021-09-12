@@ -81,13 +81,12 @@ class StoreSearch : Fragment() {
 
     private fun fetchStores(selfLocation: SelfLocation) {
         mStoresList = ArrayList()
-        val userCredentialsJSON = JSONObject()
         val requestQueue: RequestQueue? =
             context?.let { VolleySingleton.getInstance(it)?.requestQueue }
         val url =
             "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${selfLocation.latitudeDistance}, ${selfLocation.longitudeDistance}&radius=3000&types=florist&key=AIzaSyABHDVGoOtqs1P1-N_jOYFud-rQH8F0WpM"
         val stringReq = JsonObjectRequest(
-            Request.Method.GET, url, userCredentialsJSON, { response ->
+            Request.Method.GET, url,null, { response ->
                 var storeIsOpen: String
                 val jsonObject = response.getJSONArray("results")
                 for (i in 0 until jsonObject.length()) {
