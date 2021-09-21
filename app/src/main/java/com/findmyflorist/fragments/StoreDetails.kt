@@ -12,23 +12,16 @@ import com.findmyflorist.R
 import com.findmyflorist.databinding.FragmentStoreDetailsBinding
 import com.findmyflorist.model.Store
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 
-
-class StoreDetails : Fragment(), OnMapReadyCallback {
+class StoreDetails : Fragment() {
     private lateinit var mBinding: FragmentStoreDetailsBinding
-    private lateinit var mMap: GoogleMap
     private lateinit var store: Store
     private lateinit var communicator: ICommunicator
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,12 +33,8 @@ class StoreDetails : Fragment(), OnMapReadyCallback {
         }
 
         mBinding = FragmentStoreDetailsBinding.inflate(inflater, container, false)
-//        val map = requireFragmentManager().findFragmentById(R.id.map) as SupportMapFragment?
         inflater.inflate(R.layout.fragment_store_details, container, false)
         communicator = activity as ICommunicator
-//        val mapFragment = mBinding.map as SupportMapFragment
-//        val mapFragment = requireFragmentManager().findFragmentById(R.id.map) as SupportMapFragment?
-//        mapFragment?.getMapAsync(this)
         return mBinding.root
     }
 
@@ -53,14 +42,18 @@ class StoreDetails : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         updateFavorite()
         mBinding.storeTitle.text = store.storeName
-        mBinding.mapView.getMapAsync(OnMapReadyCallback { googleMap ->
+        mBinding.mapView.getMapAsync { googleMap ->
             val coordinates = LatLng(store.storeLatitude, store.storeLongitude)
             googleMap.addMarker(
                 MarkerOptions().position(coordinates).title(store.Address)
             )
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
+            googleMap.setOnMapClickListener {
+                val latLng = LatLng(store.storeLatitude, store.storeLongitude)
+                communicator.changeFragmentToMapFragment(latLng)
+            }
             mBinding.mapView.onResume()
-        })
+        }
         mBinding.wazeButton.setOnClickListener {
             communicator.openWaze(store.storeLatitude, store.storeLongitude)
         }
@@ -84,33 +77,21 @@ class StoreDetails : Fragment(), OnMapReadyCallback {
                 )
 
             } else {
-// else block means user has already accepted.And make your phone call here.
+                // else block means user has already accepted.And make your phone call here.
                 val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.phone))
                 startActivity(intent)
             }
         }
         mBinding.mapView.onCreate(savedInstanceState)
-
     }
 
-    private fun updateFavorite(){
+    private fun updateFavorite() {
         if (store.isFavorite) {
             mBinding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
         } else {
             mBinding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)
         }
     }
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-        )
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-    }
     companion object
 }

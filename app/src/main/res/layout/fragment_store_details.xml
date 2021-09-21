@@ -147,9 +147,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:enabled="true" />
+            android:layout_height="match_parent" />
 
         <View
             android:layout_height="50dp"

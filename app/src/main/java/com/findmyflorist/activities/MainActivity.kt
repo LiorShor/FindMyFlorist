@@ -22,6 +22,7 @@ import com.findmyflorist.fragments.*
 import com.findmyflorist.model.Store
 import com.findmyflorist.model.User
 import com.findmyflorist.remote.StoresRepository
+import com.google.android.gms.maps.model.LatLng
 
 class MainActivity : AppCompatActivity(), ICommunicator {
     private lateinit var mToggle: ActionBarDrawerToggle
@@ -131,6 +132,16 @@ class MainActivity : AppCompatActivity(), ICommunicator {
 
     override fun changeFragmentWithData(userName: String) {
         TODO("Not yet implemented")
+    }
+
+    override fun changeFragmentToMapFragment(latLng: LatLng) {
+        val bundle = Bundle()
+        val fragment = MapFragment()
+        bundle.putDouble("lat", latLng.latitude)
+        bundle.putDouble("lon", latLng.longitude)
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
+            .addToBackStack(null).commit()
     }
 
     override fun changeFragmentToStoreSearch() {

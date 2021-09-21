@@ -1,0 +1,23 @@
+<resources>
+    <!--
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=56:B4:6C:82:5C:35:9E:95:66:92:1B:06:F2:C2:98:87:F5:AA:0C:37%3Bcom.findmyflorist.fragments
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.findmyflorist.fragments
+
+    SHA-1 certificate fingerprint:
+    56:B4:6C:82:5C:35:9E:95:66:92:1B:06:F2:C2:98:87:F5:AA:0C:37
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyABHDVGoOtqs1P1-N_jOYFud-rQH8F0WpM</string>
+</resources>
