@@ -1,6 +1,6 @@
-package com.example.textrecognition.view.fragments
+package com.findmyflorist.fragments
 
-import java.io.Serializable
+import com.findmyflorist.model.Store
 
 interface ICommunicator {
     fun changeFragmentWithData(
@@ -10,5 +10,8 @@ interface ICommunicator {
     fun changeFragmentToStoreSearch()
     fun changeFragmentToFavorites()
     fun changeFragmentToAboutUs()
-    fun changeFragmentToStoreDetails()
+    fun changeFragmentToStoreDetails(store: Store)
+    fun openWaze(latitude: Double, longitude: Double)
+    fun openWebsite(url : String)
+
 }

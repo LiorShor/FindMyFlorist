@@ -3,22 +3,17 @@ package com.findmyflorist.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import com.findmyflorist.databinding.DialogLoginBinding
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
-import com.findmyflorist.R
-import com.findmyflorist.VolleySingleton
+import com.findmyflorist.remote.VolleySingleton
 import com.findmyflorist.activities.MainActivity.Companion.EMAIL
-import com.findmyflorist.activities.MainActivity.Companion.FULL_NAME
 import com.findmyflorist.activities.MainActivity.Companion.PASSWORD
 import com.findmyflorist.activities.MainActivity.Companion.user
-import com.findmyflorist.fragments.StoreSearch
 import org.json.JSONObject
 
 class Login(context: Context) : ConstraintLayout(context) {

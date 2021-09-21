@@ -2,73 +2,31 @@ package com.findmyflorist.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
 import com.findmyflorist.R
-import com.findmyflorist.VolleySingleton
 import com.findmyflorist.databinding.FragmentStoreSearchBinding
-import org.json.JSONObject
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.textrecognition.view.fragments.ICommunicator
 import com.findmyflorist.adapters.StoreAdapter
-import com.findmyflorist.model.SelfLocation
 import com.findmyflorist.model.Store
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import java.lang.Exception
+import com.findmyflorist.remote.StoresRepository
 import kotlin.math.*
 
 class StoreSearch : Fragment() {
     private lateinit var mCommunicator: ICommunicator
     private lateinit var mBinding: FragmentStoreSearchBinding
     private lateinit var mStoresList: ArrayList<Store>
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private lateinit var mSelfLocation: SelfLocation
+    private lateinit var storeAdapter: StoreAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        if (context?.let {
-                ContextCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            } == PackageManager.PERMISSION_GRANTED)
-            mFusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        mSelfLocation = SelfLocation(location.latitude, location.longitude)
-                        //fetchStores(selfLocation) TODO: Uncomment when app ready (DELETE the two next lines)
-                        mStoresList = ArrayList()
-                        mStoresList.add(
-                            Store(
-                                "DUMMY",
-                                "Store name",
-                                31.98714019112028,
-                                34.77956492529882,
-                                "Store address",
-                                "Closed",
-                                140.0,
-                                "039622225",
-                                false
-                            )
-                        )
-                        setUpRecyclerView()
-                    }
-                }.addOnFailureListener { exception: Exception ->
-                    Log.d("Error", exception.toString())
-                }
+        mStoresList = ArrayList()
         inflater.inflate(R.layout.fragment_store_search, container, false)
         mBinding = FragmentStoreSearchBinding.inflate(inflater, container, false)
         mCommunicator = activity as ICommunicator
@@ -77,59 +35,15 @@ class StoreSearch : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    private fun fetchStores(selfLocation: SelfLocation) {
-        mStoresList = ArrayList()
-        val requestQueue: RequestQueue? =
-            context?.let { VolleySingleton.getInstance(it)?.requestQueue }
-        val url =
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${selfLocation.latitudeDistance}, ${selfLocation.longitudeDistance}&radius=3000&types=florist&key=AIzaSyABHDVGoOtqs1P1-N_jOYFud-rQH8F0WpM"
-        val stringReq = JsonObjectRequest(
-            Request.Method.GET, url,null, { response ->
-                var storeIsOpen: String
-                val jsonObject = response.getJSONArray("results")
-                for (i in 0 until jsonObject.length()) {
-                    val storeName = jsonObject.getJSONObject(i).getString("name")
-                    val storeAddress = jsonObject.getJSONObject(i).getString("vicinity")
-                    val storeID = jsonObject.getJSONObject(i).getString("place_id")
-                    try {
-                        storeIsOpen =
-                            jsonObject.getJSONObject(i).getJSONObject("opening_hours")
-                                .getString("open_now")
-                    } catch (exception: Exception) {
-                        storeIsOpen = "false"
-                    }
-                    val storeLatitude =
-                        jsonObject.getJSONObject(i).getJSONObject("geometry")
-                            .getJSONObject("location")
-                            .getString("lat").toDouble()
-                    val storeLongitude =
-                        jsonObject.getJSONObject(i).getJSONObject("geometry")
-                            .getJSONObject("location")
-                            .getString("lng").toDouble()
-                    val storeDistanceFromUser = calculateDistanceInKilometer(
-                        selfLocation.latitudeDistance,
-                        selfLocation.longitudeDistance,
-                        storeLatitude,
-                        storeLongitude
-                    )
-                    val store = Store(
-                        storeID,
-                        storeName,
-                        storeLatitude,
-                        storeLongitude,
-                        storeAddress,
-                        storeIsOpen,
-                        storeDistanceFromUser
-                    )
-                    mStoresList.add(store)
-                }
-                setUpRecyclerView()
-            }, {
-                Log.d("Error", "Could not fetch data from Places API")
-            })
-        requestQueue?.add(stringReq)
+        storeAdapter = StoresRepository.getInstance()?.getStoreList?.let { context?.let { context ->
+            StoreAdapter(it,
+                context
+            )
+        } }!!
+        mBinding.storesRecyclerView.adapter = storeAdapter
+        mBinding.storesRecyclerView.layoutManager = LinearLayoutManager(context)
+        mStoresList = StoresRepository.getInstance()?.getStoreList!!
+        storeAdapter.notifyDataSetChanged()
     }
 
     override fun onRequestPermissionsResult(
@@ -154,11 +68,6 @@ class StoreSearch : Fragment() {
                 return
             }
         }
-    }
-
-    private fun setUpRecyclerView() {
-        mBinding.storesRecyclerView.adapter = StoreAdapter(mStoresList)
-        mBinding.storesRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     companion object {

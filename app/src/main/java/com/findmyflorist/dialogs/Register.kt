@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
-import com.findmyflorist.VolleySingleton
+import com.findmyflorist.remote.VolleySingleton
 import com.findmyflorist.activities.MainActivity.Companion.ADDRESS
 import com.findmyflorist.activities.MainActivity.Companion.EMAIL
 import com.findmyflorist.activities.MainActivity.Companion.FULL_NAME

@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.textrecognition.view.fragments.ICommunicator
 import com.findmyflorist.R
 import com.findmyflorist.databinding.FragmentRequestLocationPermissionsBinding
 

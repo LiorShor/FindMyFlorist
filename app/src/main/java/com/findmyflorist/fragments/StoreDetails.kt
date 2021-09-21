@@ -1,34 +1,31 @@
 package com.findmyflorist.fragments
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Transformations.map
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.example.textrecognition.view.fragments.ICommunicator
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.findmyflorist.R
-import com.findmyflorist.VolleySingleton
 import com.findmyflorist.databinding.FragmentStoreDetailsBinding
-import com.findmyflorist.databinding.FragmentStoreSearchBinding
 import com.findmyflorist.model.Store
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 
 
 class StoreDetails : Fragment(), OnMapReadyCallback {
     private lateinit var mBinding: FragmentStoreDetailsBinding
     private lateinit var mMap: GoogleMap
-    private lateinit var storeID : String
-    private lateinit var store : Store
+    private lateinit var store: Store
+    private lateinit var communicator: ICommunicator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -38,18 +35,71 @@ class StoreDetails : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         val bundle = arguments
-        if(bundle != null){
-            storeID = bundle.getString("STORE_ID").toString()
+        if (bundle != null) {
+            store = (bundle.getSerializable("Store") as? Store)!!
         }
+
+        mBinding = FragmentStoreDetailsBinding.inflate(inflater, container, false)
 //        val map = requireFragmentManager().findFragmentById(R.id.map) as SupportMapFragment?
         inflater.inflate(R.layout.fragment_store_details, container, false)
-        mBinding = FragmentStoreDetailsBinding.inflate(inflater, container, false)
+        communicator = activity as ICommunicator
 //        val mapFragment = mBinding.map as SupportMapFragment
 //        val mapFragment = requireFragmentManager().findFragmentById(R.id.map) as SupportMapFragment?
 //        mapFragment?.getMapAsync(this)
         return mBinding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateFavorite()
+        mBinding.storeTitle.text = store.storeName
+        mBinding.mapView.getMapAsync(OnMapReadyCallback { googleMap ->
+            val coordinates = LatLng(store.storeLatitude, store.storeLongitude)
+            googleMap.addMarker(
+                MarkerOptions().position(coordinates).title(store.Address)
+            )
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
+            mBinding.mapView.onResume()
+        })
+        mBinding.wazeButton.setOnClickListener {
+            communicator.openWaze(store.storeLatitude, store.storeLongitude)
+        }
+        mBinding.websiteButton.setOnClickListener {
+            communicator.openWebsite(store.website)
+        }
+        mBinding.favoriteButton.setOnClickListener {
+            store.isFavorite = !store.isFavorite
+            updateFavorite()
+        }
+        mBinding.phoneButton.setOnClickListener {
+            if (context?.let { it1 ->
+                    ContextCompat.checkSelfPermission(
+                        it1,
+                        android.Manifest.permission.CALL_PHONE
+                    )
+                } != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    context as Activity, arrayOf(android.Manifest.permission.CALL_PHONE),
+                    101
+                )
+
+            } else {
+// else block means user has already accepted.And make your phone call here.
+                val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.phone))
+                startActivity(intent)
+            }
+        }
+        mBinding.mapView.onCreate(savedInstanceState)
+
+    }
+
+    private fun updateFavorite(){
+        if (store.isFavorite) {
+            mBinding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
+        } else {
+            mBinding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)
+        }
+    }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -62,27 +112,5 @@ class StoreDetails : Fragment(), OnMapReadyCallback {
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
-
-    private fun fetchStoreData() {
-        val url =
-            "https://maps.googleapis.com/maps/api/place/details/json?place_id=${store.storeID}&fields=name%2Crating%2Cformatted_phone_number&key=AIzaSyABHDVGoOtqs1P1-N_jOYFud-rQH8F0WpM"
-        val requestQueue: RequestQueue? =
-            context?.let { VolleySingleton.getInstance(it)?.requestQueue }
-        val stringReq = JsonObjectRequest(
-            Request.Method.GET, url, null, { response ->
-                val jsonObjectResponse = response.getJSONObject("result")
-                val storeName = jsonObjectResponse.getString("name")
-                val storePhone = jsonObjectResponse.getString("formatted_phone_number")
-                val storeWebsite = jsonObjectResponse.getString("website")
-                val storeAddress = jsonObjectResponse.getString("vicinity")
-                val storeIsOpen : String = if(jsonObjectResponse.getBoolean("open_now")) "Open" else "Closed"
-                val storeRating = jsonObjectResponse.getDouble("rating")
-                val storeLatitude = jsonObjectResponse.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
-                val storeLongitude = jsonObjectResponse.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
-                store = Store(storeID,storeName,storeLatitude,storeLongitude,storeAddress,storeIsOpen,0.0,storePhone)
-            }, {})
-        requestQueue?.add(stringReq)
-    }
-
     companion object
 }

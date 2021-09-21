@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_storedetails"
     tools:context=".fragments.StoreDetails">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/storeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="177dp"
@@ -20,14 +18,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+        app:layout_constraintTop_toBottomOf="@+id/mapViewFrameLayout" />
 
     <ImageButton
         android:id="@+id/wazeButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="15dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/round_corners_button"
         android:backgroundTint="#BDD1AE"
         android:padding="15dp"
@@ -36,55 +35,91 @@
         app:circularflow_radiusInDP="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/phoneButton"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/storeTitle"
         app:tint="@color/white" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/navigate"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/wazeButton"
+        app:layout_constraintStart_toStartOf="@+id/wazeButton"
+        app:layout_constraintTop_toBottomOf="@+id/wazeButton" />
 
     <ImageButton
         android:id="@+id/phoneButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="15dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/round_corners_button"
         android:backgroundTint="#BDD1AE"
         android:src="@drawable/ic_phone"
         app:layout_constraintEnd_toStartOf="@+id/wazeButton"
         app:layout_constraintStart_toEndOf="@+id/websiteButton"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/storeTitle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/make_a_call"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/phoneButton"
+        app:layout_constraintStart_toStartOf="@+id/phoneButton"
+        app:layout_constraintTop_toBottomOf="@+id/phoneButton" />
 
     <ImageButton
         android:id="@+id/websiteButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="15dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/round_corners_button"
         android:backgroundTint="#BDD1AE"
         android:src="@drawable/ic_web"
         app:layout_constraintEnd_toStartOf="@+id/phoneButton"
         app:layout_constraintStart_toEndOf="@+id/favoriteButton"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/storeTitle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/website"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/websiteButton"
+        app:layout_constraintStart_toStartOf="@+id/websiteButton"
+        app:layout_constraintTop_toBottomOf="@+id/websiteButton" />
 
     <ImageButton
         android:id="@+id/favoriteButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="15dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/round_corners_button"
         android:backgroundTint="#BDD1AE"
         android:src="@drawable/ic_in_favorite"
         app:layout_constraintEnd_toStartOf="@+id/websiteButton"
         app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/storeTitle" />
 
-    <Button
-        android:id="@+id/button3"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/add_to_favorites"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/favoriteButton"
+        app:layout_constraintStart_toStartOf="@+id/favoriteButton"
+        app:layout_constraintTop_toBottomOf="@+id/favoriteButton" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
+        android:text="@string/back"
+        android:background="@drawable/buttondesign"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -95,17 +130,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+    <FrameLayout
         android:layout_width="match_parent"
+        android:id="@+id/mapViewFrameLayout"
         android:layout_height="205dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:enabled="true" />
+
+        <View
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="top"
+            android:background="@drawable/gradient_fade"
+            android:rotation="180"
+            />
+
+        <View
+           android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_fade"
+            />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

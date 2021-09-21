@@ -1,4 +1,4 @@
-package com.findmyflorist
+package com.findmyflorist.remote
 
 import android.content.Context
 import com.android.volley.RequestQueue

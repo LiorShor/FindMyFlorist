@@ -1,7 +1,9 @@
 package com.findmyflorist.activities
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -12,12 +14,14 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
-import com.example.textrecognition.view.fragments.ICommunicator
+import com.findmyflorist.fragments.ICommunicator
 import com.findmyflorist.R
 import com.findmyflorist.databinding.ActivityMainBinding
 import com.findmyflorist.dialogs.Login
 import com.findmyflorist.fragments.*
+import com.findmyflorist.model.Store
 import com.findmyflorist.model.User
+import com.findmyflorist.remote.StoresRepository
 
 class MainActivity : AppCompatActivity(), ICommunicator {
     private lateinit var mToggle: ActionBarDrawerToggle
@@ -27,18 +31,7 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        if (applicationContext.let {
-                ContextCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            } !=
-            PackageManager.PERMISSION_GRANTED) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, RequestLocationPermissionsFragment()).commit()
-        } else {
-            changeFragmentToStoreSearch()
-        }
+        StoresRepository.getInstance()?.init(this, applicationContext)
         actionBarDrawerConfiguration()
     }
 
@@ -141,7 +134,19 @@ class MainActivity : AppCompatActivity(), ICommunicator {
     }
 
     override fun changeFragmentToStoreSearch() {
-        supportFragmentManager.beginTransaction().replace(R.id.container, StoreSearch()).commit()
+        if (applicationContext.let {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } !=
+            PackageManager.PERMISSION_GRANTED) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, RequestLocationPermissionsFragment()).commit()
+        } else {
+            supportFragmentManager.beginTransaction().replace(R.id.container, StoreSearch())
+                .commit()
+        }
     }
 
     override fun changeFragmentToFavorites() {
@@ -152,7 +157,34 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         supportFragmentManager.beginTransaction().replace(R.id.container, About()).commit()
     }
 
-    override fun changeFragmentToStoreDetails() {
-        supportFragmentManager.beginTransaction().replace(R.id.container, StoreDetails()).commit()
+    override fun changeFragmentToStoreDetails(store: Store) {
+        val bundle = Bundle()
+        val fragment = StoreDetails()
+        bundle.putSerializable("Store", store)
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
+            .addToBackStack(null).commit()
+    }
+
+    override fun openWaze(latitude: Double, longitude: Double) {
+        packageManager?.let {
+            val url = "waze://?ll=$latitude,$longitude&navigate=yes"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            intent.resolveActivity(it)?.let {
+                startActivity(intent)
+            } ?: run {
+                Toast.makeText(
+                    applicationContext,
+                    "It appears waze is not installed on your phone",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    override fun openWebsite(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
     }
 }

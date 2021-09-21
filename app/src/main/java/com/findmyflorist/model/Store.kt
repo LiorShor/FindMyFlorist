@@ -1,5 +1,7 @@
 package com.findmyflorist.model
 
+import java.io.Serializable
+
 class Store(
     val storeID: String,
     val storeName: String,
@@ -9,5 +11,6 @@ class Store(
     val isOpen: String,
     val storeDistanceFromUser : Double,
     val phone: String = "",
-    val isFavorite: Boolean = false
-)
+    var isFavorite: Boolean = false,
+    val website : String = ""
+) : Serializable
