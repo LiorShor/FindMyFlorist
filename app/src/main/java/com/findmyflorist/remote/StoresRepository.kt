@@ -8,20 +8,31 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
+import com.findmyflorist.CustomJsonArrayRequest
+import com.findmyflorist.activities.MainActivity.Companion.USERID
+import com.findmyflorist.fragments.IAdapterListener
 import com.findmyflorist.fragments.ICommunicator
 import com.findmyflorist.fragments.StoreSearch
 import com.findmyflorist.model.SelfLocation
 import com.findmyflorist.model.Store
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
+import org.json.JSONArray
+import org.json.JSONObject
 import java.lang.Exception
-import java.util.*
-import kotlin.math.log
+import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 class StoresRepository {
+    //TODO check where to call the get favorite stores (need to be after logging in)
     private lateinit var mCommunicator: ICommunicator
+    internal lateinit var adapterListener: IAdapterListener
     private var mStoresList: ArrayList<Store>? = null
+    private lateinit var userID: String
+    private var mFavoriteStoresList: ArrayList<String>? = null
     private lateinit var mSelfLocation: SelfLocation
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     val getStoreList: ArrayList<Store>?
@@ -42,8 +53,12 @@ class StoresRepository {
 
     fun init(activity: ICommunicator, context: Context) {
         mCommunicator = activity
-        mStoresList = ArrayList<Store>()
+        mStoresList = ArrayList()
         getUserLocation(context)
+    }
+
+    fun setAdapter(adapter: IAdapterListener) {
+        adapterListener = adapter
     }
 
     private fun getUserLocation(context: Context) {
@@ -68,6 +83,19 @@ class StoresRepository {
                 .addOnFailureListener { exception: Exception ->
                     Log.d("Error", exception.toString())
                 }
+    }
+
+    private fun isExist(): Boolean {
+        var isExist = false
+        for (i in 0 until mFavoriteStoresList!!.size) {
+            for (j in 0 until mStoresList!!.size) {
+                if (mStoresList!![j].storeID == mFavoriteStoresList!![i]) {
+                    mStoresList!![j].isFavorite = true
+                    isExist = true
+                }
+            }
+        }
+        return isExist
     }
 
     private fun fetchStores(requestQueue: RequestQueue) {
@@ -112,9 +140,25 @@ class StoresRepository {
                     )
                     mStoresList!!.add(store)
                 }
+                addStoresToDatabase(requestQueue)
                 mCommunicator.changeFragmentToStoreSearch()
             }, {
                 Log.d("Error", "Could not fetch data from Places API")
+            })
+        requestQueue.add(stringReq)
+    }
+
+    private fun addStoresToDatabase(requestQueue: RequestQueue) {
+        val storeAsString = mStoresList?.stream()?.map { store->store.storeID }?.collect(
+            Collectors.toList())
+        val json = Gson().toJson(storeAsString)
+        val jsonParam = JSONArray(json)
+        val url = "http://192.168.1.20:45455/api/Store/AddNewStoreByID"
+        val stringReq = JsonArrayRequest(
+            Request.Method.POST, url, jsonParam, { response ->
+                Log.d("AddStoresToDB", response.toString())
+            }, {
+                Log.d("Error", "signIn: check if server is up")
             })
         requestQueue.add(stringReq)
     }
@@ -166,6 +210,44 @@ class StoresRepository {
                 mCommunicator.changeFragmentToStoreDetails(store!!)
             },
             {})
+        requestQueue?.add(stringReq)
+    }
+
+    fun fetchFavoriteStores(context: Context, userID: String) {
+        this.userID = userID
+        mFavoriteStoresList = ArrayList()
+        val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
+        val params = JSONArray()
+        val jsonParam = JSONObject()
+        jsonParam.put(USERID, userID)
+        params.put(jsonParam)
+        val url = "http://192.168.1.20:45455/api/Store/GetFavoriteStores"
+        val stringReq = CustomJsonArrayRequest(
+            Request.Method.POST, url, jsonParam, { response ->
+                Log.d("VolleySucceedSignIn", response.toString())
+                for (i in 0 until response.length()) {
+                    mFavoriteStoresList!!.add(response.getJSONObject(i).getString("storeID"))
+                }
+                isExist()
+                adapterListener.refreshAdapter()
+            }, {
+                Log.d("Error", "signIn: check if server is up")
+            })
+        requestQueue?.add(stringReq)
+    }
+
+    fun addOrRemoveStoreFromFavorite(context: Context, storeID: String, command: String) {
+        val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
+        val jsonObject = JSONObject()
+        jsonObject.put("StoreID",storeID)
+        jsonObject.put("UserID",userID)
+        val url = "http://192.168.1.20:45455/api/Store/${command}"
+        val stringReq = JsonObjectRequest(
+            Request.Method.POST, url, jsonObject, { response ->
+                Log.d("VolleySucceedSignIn", response.toString())
+            }, {
+                Log.d("Error", "signIn: check if server is up")
+            })
         requestQueue?.add(stringReq)
     }
 }

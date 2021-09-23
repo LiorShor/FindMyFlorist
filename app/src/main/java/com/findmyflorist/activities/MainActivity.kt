@@ -53,9 +53,12 @@ class MainActivity : AppCompatActivity(), ICommunicator {
 
         }
         logoutTextView.setOnClickListener {
+            user.fullName = "Hello guest"
             headerTextView.text = getString(R.string.hello_guest)
             signInTextView.visibility = View.VISIBLE
             logoutTextView.visibility = View.INVISIBLE
+            StoresRepository.getInstance()?.getStoreList?.stream()?.forEach { store -> store.isFavorite = false}
+            StoresRepository.getInstance()?.adapterListener?.refreshAdapter()
         }
         mToggle = object : ActionBarDrawerToggle(
             this,
@@ -76,7 +79,7 @@ class MainActivity : AppCompatActivity(), ICommunicator {
 
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         mToggle.drawerArrowDrawable.color =
-            ContextCompat.getColor(this, R.color.white) //Set the drawer icon to white
+            ContextCompat.getColor(this, R.color.black) //Set the drawer icon to white
         mBinding.drawerLayout.addDrawerListener(mToggle)
         mToggle.syncState()
         mBinding.navView.setNavigationItemSelectedListener {
@@ -128,10 +131,6 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         }
         return super.onOptionsItemSelected(item)
 
-    }
-
-    override fun changeFragmentWithData(userName: String) {
-        TODO("Not yet implemented")
     }
 
     override fun changeFragmentToMapFragment(latLng: LatLng) {

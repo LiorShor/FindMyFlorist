@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import com.findmyflorist.remote.StoresRepository
 
 class StoreDetails : Fragment() {
     private lateinit var mBinding: FragmentStoreDetailsBinding
@@ -40,29 +41,33 @@ class StoreDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateFavorite()
+        updateFavoriteUI()
         mBinding.storeTitle.text = store.storeName
         mBinding.mapView.getMapAsync { googleMap ->
-            val coordinates = LatLng(store.storeLatitude, store.storeLongitude)
+            val coordinates = LatLng(store.Latitude, store.Longitude)
             googleMap.addMarker(
                 MarkerOptions().position(coordinates).title(store.Address)
             )
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
             googleMap.setOnMapClickListener {
-                val latLng = LatLng(store.storeLatitude, store.storeLongitude)
+                val latLng = LatLng(store.Latitude, store.Longitude)
                 communicator.changeFragmentToMapFragment(latLng)
             }
             mBinding.mapView.onResume()
         }
         mBinding.wazeButton.setOnClickListener {
-            communicator.openWaze(store.storeLatitude, store.storeLongitude)
+            communicator.openWaze(store.Latitude, store.Longitude)
         }
         mBinding.websiteButton.setOnClickListener {
             communicator.openWebsite(store.website)
         }
         mBinding.favoriteButton.setOnClickListener {
             store.isFavorite = !store.isFavorite
-            updateFavorite()
+            StoresRepository.getInstance()?.getStoreList?.stream()?.forEach { storeFromStoresList -> if(storeFromStoresList.storeID== store.storeID)
+            {
+                storeFromStoresList.isFavorite = store.isFavorite
+            }}
+            updateFavoriteUI()
         }
         mBinding.phoneButton.setOnClickListener {
             if (context?.let { it1 ->
@@ -85,7 +90,7 @@ class StoreDetails : Fragment() {
         mBinding.mapView.onCreate(savedInstanceState)
     }
 
-    private fun updateFavorite() {
+    private fun updateFavoriteUI() {
         if (store.isFavorite) {
             mBinding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
         } else {

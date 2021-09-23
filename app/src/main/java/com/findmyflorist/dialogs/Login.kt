@@ -14,6 +14,7 @@ import com.findmyflorist.remote.VolleySingleton
 import com.findmyflorist.activities.MainActivity.Companion.EMAIL
 import com.findmyflorist.activities.MainActivity.Companion.PASSWORD
 import com.findmyflorist.activities.MainActivity.Companion.user
+import com.findmyflorist.remote.StoresRepository
 import org.json.JSONObject
 
 class Login(context: Context) : ConstraintLayout(context) {
@@ -88,18 +89,18 @@ class Login(context: Context) : ConstraintLayout(context) {
         userCredentialsJSON.put(EMAIL, emailAddress)
         userCredentialsJSON.put(PASSWORD, password)
         val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
-        val url = "http://192.168.1.23:45455/api/User/SignIn"
+        val url = "http://192.168.1.20:45455/api/User/SignIn"
         val stringReq = JsonObjectRequest(
             Request.Method.POST, url, userCredentialsJSON, { response ->
                 Log.d("VolleySucceedSignIn", response.toString())
-                if(response.getBoolean("succeed")) {
-                    user.fullName = "Hello " + response.getString("message")
-                    mLoginDialog.dismiss()
-                }
-                else{
-                    mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
-                    mBinding.editTextPassword.setHintTextColor(Color.RED)
-                }
+               
+                user.fullName = "Hello " + response.getString("fullName")
+                val userID = response.getString("userID")
+                StoresRepository.getInstance()?.fetchFavoriteStores(context, userID)
+                mLoginDialog.dismiss()
+//                    mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
+//                    mBinding.editTextPassword.setHintTextColor(Color.RED)
+
             }, {
                 Log.d("Error", "signIn: check if server is up")
             })

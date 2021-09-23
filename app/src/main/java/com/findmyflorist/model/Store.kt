@@ -5,8 +5,8 @@ import java.io.Serializable
 class Store(
     val storeID: String,
     val storeName: String,
-    val storeLatitude: Double,
-    val storeLongitude: Double,
+    val Latitude: Double,
+    val Longitude: Double,
     val Address: String,
     val isOpen: String,
     val storeDistanceFromUser : Double,
