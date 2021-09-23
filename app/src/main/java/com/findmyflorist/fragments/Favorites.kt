@@ -5,10 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.findmyflorist.R
+import android.widget.AdapterView
+import androidx.core.view.get
+import com.findmyflorist.adapters.FavoriteStoreAdapter
+import com.findmyflorist.databinding.FragmentFavoritesBinding
+import com.findmyflorist.model.Store
+import com.findmyflorist.remote.StoresRepository
 
 class Favorites : Fragment() {
-
+    private lateinit var mBinding: FragmentFavoritesBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -16,9 +21,20 @@ class Favorites : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false)
+    ): View {
+        mBinding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        return mBinding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val favoriteStoreAdapter = context?.let { FavoriteStoreAdapter(it) }
+        mBinding.favoriteGridView.adapter = favoriteStoreAdapter
+        mBinding.favoriteGridView.setOnItemClickListener { adapter, _, position, _ ->
+            val store = adapter.getItemAtPosition(position) as Store
+            context?.let { StoresRepository.getInstance()?.fetchStoreDetails(it,store.storeID)}
+        }
     }
 
     companion object

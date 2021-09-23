@@ -30,7 +30,12 @@ class StoreAdapter(private val storesList: ArrayList<Store>, private val context
         holder.mCommunicator = activity as ICommunicator
         val store = storesList[position]
         holder.binding.shopTitleTextView.text = store.storeName
-        holder.binding.shopOpenTimeTextView.text = store.isOpen
+        if(store.isOpen == "true") {
+            holder.binding.shopOpenTimeTextView.text = context.getString(R.string.open)
+        }
+        else{
+            holder.binding.shopOpenTimeTextView.text = context.getString(R.string.closed)
+        }
         holder.binding.distanceTextView.text = store.storeDistanceFromUser.toString()
         if(MainActivity.user.fullName == "Hello guest"){
             holder.binding.favoriteButton.visibility = View.INVISIBLE

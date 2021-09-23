@@ -34,7 +34,7 @@ class StoreDetails : Fragment() {
         }
 
         mBinding = FragmentStoreDetailsBinding.inflate(inflater, container, false)
-        inflater.inflate(R.layout.fragment_store_details, container, false)
+//        inflater.inflate(R.layout.fragment_store_details, container, false)
         communicator = activity as ICommunicator
         return mBinding.root
     }

@@ -14,16 +14,18 @@
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/dialog_login.xml" value="0.33" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/dialog_register.xml" value="0.16853932584269662" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/favorite_item.xml" value="0.67" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_about.xml" value="0.1828125" />
-        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_favorites.xml" value="0.1828125" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_favorites.xml" value="0.25" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_map.xml" value="0.10435663627152988" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_request_location_permissions.xml" value="0.18" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_store_details.xml" value="0.33" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/fragment_store_search.xml" value="0.21052631578947367" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/nav_header.xml" value="0.25842696629213485" />
-        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/row.xml" value="0.326" />
+        <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/row.xml" value="0.19345238095238096" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/layout/toolbar.xml" value="0.1037037037037037" />
         <entry key="..\:/Users/liors/AndroidStudioProjects/FindMyFlorist/app/src/main/res/menu/nav_drawer_menu.xml" value="0.1037037037037037" />
+        <entry key="..\:/Users/liors/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/activity_list_item.xml" value="0.1" />
       </map>
     </option>
   </component>

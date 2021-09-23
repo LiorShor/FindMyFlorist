@@ -24,7 +24,6 @@
     <string name="user_email">Email</string>
     <string name="user_password">Password</string>
     <string name="close">Close</string>
-    <string name="open">Open</string>
     <string name="address">Address</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -42,4 +41,7 @@
     <string name="website">Website</string>
     <string name="make_a_call">Make a call</string>
     <string name="navigate">Navigate</string>
+    <string name="closed">Closed</string>
+    <string name="open">Open</string>
+    <string name="favorites">Favorites</string>
 </resources>
