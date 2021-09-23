@@ -27,7 +27,6 @@ import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
 class StoresRepository {
-    //TODO check where to call the get favorite stores (need to be after logging in)
     private lateinit var mCommunicator: ICommunicator
     internal lateinit var adapterListener: IAdapterListener
     private var mStoresList: ArrayList<Store>? = null
@@ -207,6 +206,8 @@ class StoresRepository {
                     false,
                     storeWebsite
                 )
+                if (mFavoriteStoresList?.find { storeID -> storeID == store!!.storeID } != null)
+                    store!!.isFavorite = true
                 mCommunicator.changeFragmentToStoreDetails(store!!)
             },
             {})

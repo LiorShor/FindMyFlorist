@@ -34,14 +34,13 @@ class StoreDetails : Fragment() {
         }
 
         mBinding = FragmentStoreDetailsBinding.inflate(inflater, container, false)
-//        inflater.inflate(R.layout.fragment_store_details, container, false)
         communicator = activity as ICommunicator
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateFavoriteUI()
+        updateFavoriteUIAndDB()
         mBinding.storeTitle.text = store.storeName
         mBinding.mapView.getMapAsync { googleMap ->
             val coordinates = LatLng(store.Latitude, store.Longitude)
@@ -65,9 +64,10 @@ class StoreDetails : Fragment() {
             store.isFavorite = !store.isFavorite
             StoresRepository.getInstance()?.getStoreList?.stream()?.forEach { storeFromStoresList -> if(storeFromStoresList.storeID== store.storeID)
             {
+
                 storeFromStoresList.isFavorite = store.isFavorite
             }}
-            updateFavoriteUI()
+            updateFavoriteUIAndDB()
         }
         mBinding.phoneButton.setOnClickListener {
             if (context?.let { it1 ->
@@ -90,10 +90,25 @@ class StoreDetails : Fragment() {
         mBinding.mapView.onCreate(savedInstanceState)
     }
 
-    private fun updateFavoriteUI() {
+    private fun updateFavoriteUIAndDB() {
         if (store.isFavorite) {
+            context?.let { it1 ->
+                StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(
+                    it1,
+                    store.storeID,
+                    "AddStoreToFavorites"
+                )
+            }
+
             mBinding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
         } else {
+            context?.let { it1 ->
+                StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(
+                    it1,
+                    store.storeID,
+                    "RemoveStoreFromFavorites"
+                )
+            }
             mBinding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)
         }
     }

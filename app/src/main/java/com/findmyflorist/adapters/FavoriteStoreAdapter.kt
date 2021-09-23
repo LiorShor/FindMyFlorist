@@ -16,7 +16,8 @@ import com.findmyflorist.R
 
 class FavoriteStoreAdapter(private val context: Context) : BaseAdapter() {
     private var layoutInflater: LayoutInflater? = null
-    private val mFavoriteStoresList: ArrayList<Store> = (StoresRepository.getInstance()?.getStoreList?.filter { it.isFavorite } as ArrayList<Store>?)!!
+    private val mFavoriteStoresList: ArrayList<Store> =
+        (StoresRepository.getInstance()?.getStoreList?.filter { it.isFavorite } as ArrayList<Store>?)!!
     private lateinit var shopTitle: TextView
     private lateinit var favoriteImageButton: ImageView
     override fun getCount(): Int {
@@ -50,10 +51,15 @@ class FavoriteStoreAdapter(private val context: Context) : BaseAdapter() {
         val store = mFavoriteStoresList[position]
         favoriteImageButton.setOnClickListener {
             if (store.isFavorite) {
-                StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(context, store.storeID,"RemoveStoreFromFavorites")
+                StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(
+                    context,
+                    store.storeID,
+                    "RemoveStoreFromFavorites"
+                )
             }
             val storesList = StoresRepository.getInstance()?.getStoreList
-            val storeIndex = (storesList?.indices)?.firstOrNull { i: Int -> storesList[i].storeID== mFavoriteStoresList[position].storeID }
+            val storeIndex =
+                (storesList?.indices)?.firstOrNull { i: Int -> storesList[i].storeID == mFavoriteStoresList[position].storeID }
             storeIndex?.let { it1 -> storesList[it1].isFavorite = false }
             mFavoriteStoresList.remove(mFavoriteStoresList[position])
             notifyDataSetChanged()

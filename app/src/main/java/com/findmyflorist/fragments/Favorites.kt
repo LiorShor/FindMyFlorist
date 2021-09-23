@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import androidx.core.view.get
 import com.findmyflorist.adapters.FavoriteStoreAdapter
 import com.findmyflorist.databinding.FragmentFavoritesBinding
 import com.findmyflorist.model.Store
@@ -14,9 +12,6 @@ import com.findmyflorist.remote.StoresRepository
 
 class Favorites : Fragment() {
     private lateinit var mBinding: FragmentFavoritesBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

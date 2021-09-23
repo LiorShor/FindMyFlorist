@@ -57,7 +57,8 @@ class MainActivity : AppCompatActivity(), ICommunicator {
             headerTextView.text = getString(R.string.hello_guest)
             signInTextView.visibility = View.VISIBLE
             logoutTextView.visibility = View.INVISIBLE
-            StoresRepository.getInstance()?.getStoreList?.stream()?.forEach { store -> store.isFavorite = false}
+            StoresRepository.getInstance()?.getStoreList?.stream()
+                ?.forEach { store -> store.isFavorite = false }
             StoresRepository.getInstance()?.adapterListener?.refreshAdapter()
         }
         mToggle = object : ActionBarDrawerToggle(
@@ -85,7 +86,15 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         mBinding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.homeItem -> changeFragmentToStoreSearch()
-                R.id.favoriteItem -> changeFragmentToFavorites()
+                R.id.favoriteItem -> {
+                    if (user.fullName != "Hello guest") {
+                        changeFragmentToFavorites()
+                    }
+                    else
+                    {
+                        Toast.makeText(applicationContext,"Please log in to see your favorite stores",Toast.LENGTH_LONG).show()
+                    }
+                }
                 R.id.aboutItem -> changeFragmentToAboutUs()
             }
             mBinding.drawerLayout.closeDrawers()
