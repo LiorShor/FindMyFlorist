@@ -3,10 +3,19 @@ package com.findmyflorist.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import com.findmyflorist.databinding.DialogLoginBinding
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.findmyflorist.remote.VolleySingleton
+import com.findmyflorist.activities.MainActivity.Companion.EMAIL
+import com.findmyflorist.activities.MainActivity.Companion.PASSWORD
+import com.findmyflorist.activities.MainActivity.Companion.user
+import com.findmyflorist.remote.StoresRepository
+import org.json.JSONObject
 
 class Login(context: Context) : ConstraintLayout(context) {
     private val mLoginDialog = Dialog(context)
@@ -16,7 +25,7 @@ class Login(context: Context) : ConstraintLayout(context) {
         setDialogSettings()
         onClickLoginButton(context)
         onClicksSignUpEditText(context)
-        onClickForgotPassword(context)
+        onClickForgotPassword()
     }
 
     private fun setDialogSettings() {
@@ -42,7 +51,7 @@ class Login(context: Context) : ConstraintLayout(context) {
         }
     }
 
-    private fun onClickForgotPassword(context: Context) {
+    private fun onClickForgotPassword() {
         mBinding.forgotPasswordTextView.setOnClickListener {
         }
     }
@@ -50,7 +59,7 @@ class Login(context: Context) : ConstraintLayout(context) {
     private fun onClickLoginButton(context: Context) {
         mBinding.signIn.setOnClickListener {
 
-            val emailAddress = mBinding.editTextTextEmailAddress.text.toString()
+            val emailAddress = mBinding.editTextEmailAddress.text.toString()
             val password = mBinding.editTextPassword.text.toString()
             if (stringChecker(
                     emailAddress,
@@ -65,7 +74,7 @@ class Login(context: Context) : ConstraintLayout(context) {
     private fun stringChecker(emailAddress: String, password: String): Boolean {
         var isValid = true
         if (emailAddress.isEmpty()) {
-            mBinding.editTextTextEmailAddress.setHintTextColor(Color.RED)
+            mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
             isValid = false
         }
         if (password.isEmpty()) {
@@ -76,6 +85,25 @@ class Login(context: Context) : ConstraintLayout(context) {
     }
 
     private fun signIn(emailAddress: String, password: String, context: Context) {
-        val bundle = Bundle()
+        val userCredentialsJSON = JSONObject()
+        userCredentialsJSON.put(EMAIL, emailAddress)
+        userCredentialsJSON.put(PASSWORD, password)
+        val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
+        val url = "http://192.168.1.20:45455/api/User/SignIn"
+        val stringReq = JsonObjectRequest(
+            Request.Method.POST, url, userCredentialsJSON, { response ->
+                Log.d("VolleySucceedSignIn", response.toString())
+               
+                user.fullName = "Hello " + response.getString("fullName")
+                val userID = response.getString("userID")
+                StoresRepository.getInstance()?.fetchFavoriteStores(context, userID)
+                mLoginDialog.dismiss()
+//                    mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
+//                    mBinding.editTextPassword.setHintTextColor(Color.RED)
+
+            }, {
+                Log.d("Error", "signIn: check if server is up")
+            })
+        requestQueue?.add(stringReq)
     }
 }

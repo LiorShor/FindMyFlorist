@@ -21,4 +21,34 @@
     <string name="continue_with_email">Continue with Email</string>
     <string name="continue_with_fingerprint">Continue with Fingerprint</string>
     <string name="logo">Logo</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="close">Close</string>
+    <string name="address">Address</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorite_button">Favorite button</string>
+    <string name="enable_location">Enable Location</string>
+    <string name="hello_guest">Hello guest</string>
+    <string name="sign_in_register">Sign-in / Register</string>
+    <string name="log_out">Log out</string>
+    <string name="about_us">About FindMyFlorist</string>
+    <string name="favorite">Favorite</string>
+    <string name="home">Home</string>
+    <string name="store_title">Store title</string>
+    <string name="back">Back</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="website">Website</string>
+    <string name="make_a_call">Make a call</string>
+    <string name="navigate">Navigate</string>
+    <string name="closed">Closed</string>
+    <string name="open">Open</string>
+    <string name="favorites">Favorites</string>
+    <string name="map_view">map view</string>
+    <string name="please_enter_city_name">Please enter city name</string>
+    <string name="search_for_florists">Search for florists</string>
+    <string name="search">Search</string>
+    <string-array name="dropdown_items">
+        <item>Current location</item>
+        <item>Around a city</item>
+    </string-array>
 </resources>
