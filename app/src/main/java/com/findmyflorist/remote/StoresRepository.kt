@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.findmyflorist.CustomJsonArrayRequest
 import com.findmyflorist.activities.MainActivity.Companion.USERID
+import com.findmyflorist.activities.MainActivity.Companion.user
 import com.findmyflorist.fragments.IAdapterListener
 import com.findmyflorist.fragments.ICommunicator
 import com.findmyflorist.fragments.StoreSearch
@@ -34,6 +35,7 @@ class StoresRepository {
     private var mFavoriteStoresList: ArrayList<String>? = null
     private lateinit var mSelfLocation: SelfLocation
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var requestQueue: RequestQueue
     val getStoreList: ArrayList<Store>?
         get() = mStoresList
 
@@ -54,13 +56,14 @@ class StoresRepository {
         mCommunicator = activity
         mStoresList = ArrayList()
         getUserLocation(context)
+        requestQueue = VolleySingleton.getInstance(context)?.requestQueue!!
     }
 
     fun setAdapter(adapter: IAdapterListener) {
         adapterListener = adapter
     }
 
-    private fun getUserLocation(context: Context) {
+    fun getUserLocation(context: Context) {
         val requestQueue: RequestQueue? =
             context.let { VolleySingleton.getInstance(it)?.requestQueue }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -75,7 +78,7 @@ class StoresRepository {
                     if (location != null) {
                         mSelfLocation = SelfLocation(location.latitude, location.longitude)
                         if (requestQueue != null) {
-                            fetchStores(requestQueue)
+                            fetchStores()
                         }
                     }
                 }
@@ -97,9 +100,28 @@ class StoresRepository {
         return isExist
     }
 
-    private fun fetchStores(requestQueue: RequestQueue) {
+    fun getLatLonByAddress(queryText: String) {
+        mStoresList?.clear()
         val url =
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${mSelfLocation.latitudeDistance}, ${mSelfLocation.longitudeDistance}&radius=3000&types=florist&key=AIzaSyABHDVGoOtqs1P1-N_jOYFud-rQH8F0WpM"
+            "http://api.positionstack.com/v1/forward?access_key=0584242924622fa92941238c9c2d23b7&query=${queryText}"
+        val stringReq = JsonObjectRequest(
+            Request.Method.GET, url, null, { response ->
+            try{
+                mSelfLocation.latitude = response.getJSONArray("data").getJSONObject(0).getDouble("latitude")
+                mSelfLocation.longitude = response.getJSONArray("data").getJSONObject(0).getDouble("longitude")
+                fetchStores()
+            }catch (exception: Exception) {
+                Log.d("Error", "getLatLonByAddress: could not find latitude or longitude for $queryText")
+            }
+            }, {
+                Log.d("Error", "Could not fetch Lat lon by address")
+            })
+        requestQueue.add(stringReq)
+    }
+
+    private fun fetchStores() {
+        val url =
+            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${mSelfLocation.latitude}, ${mSelfLocation.longitude}&radius=3000&types=florist&key=AIzaSyABHDVGoOtqs1P1-N_jOYFud-rQH8F0WpM"
         val stringReq = JsonObjectRequest(
             Request.Method.GET, url, null, { response ->
                 var storeIsOpen: String
@@ -123,8 +145,8 @@ class StoresRepository {
                             .getJSONObject("location")
                             .getString("lng").toDouble()
                     val storeDistanceFromUser = StoreSearch.calculateDistanceInKilometer(
-                        mSelfLocation.latitudeDistance,
-                        mSelfLocation.longitudeDistance,
+                        mSelfLocation.latitude,
+                        mSelfLocation.longitude,
                         storeLatitude,
                         storeLongitude
                     )
@@ -148,8 +170,9 @@ class StoresRepository {
     }
 
     private fun addStoresToDatabase(requestQueue: RequestQueue) {
-        val storeAsString = mStoresList?.stream()?.map { store->store.storeID }?.collect(
-            Collectors.toList())
+        val storeAsString = mStoresList?.stream()?.map { store -> store.storeID }?.collect(
+            Collectors.toList()
+        )
         val json = Gson().toJson(storeAsString)
         val jsonParam = JSONArray(json)
         val url = "http://192.168.1.20:45455/api/Store/AddNewStoreByID"
@@ -172,12 +195,13 @@ class StoresRepository {
             Request.Method.GET, url, null, { response ->
                 val jsonObjectResponse = response.getJSONObject("result")
                 val storeName = jsonObjectResponse.getString("name")
-                val storePhone = jsonObjectResponse.getString("formatted_phone_number")
                 var storeWebsite = ""
                 var storeAddress = ""
+                var storePhone = ""
                 var storeIsOpen = "Closed"
                 var storeRating = 0.0
                 try {
+                    storePhone = jsonObjectResponse.getString("formatted_phone_number")
                     storeWebsite = jsonObjectResponse.getString("website")
                     storeAddress = jsonObjectResponse.getString("vicinity")
                     storeIsOpen = if (jsonObjectResponse.getJSONObject("opening_hours")
@@ -240,8 +264,8 @@ class StoresRepository {
     fun addOrRemoveStoreFromFavorite(context: Context, storeID: String, command: String) {
         val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
         val jsonObject = JSONObject()
-        jsonObject.put("StoreID",storeID)
-        jsonObject.put("UserID",userID)
+        jsonObject.put("StoreID", storeID)
+        jsonObject.put("UserID", userID)
         val url = "http://192.168.1.20:45455/api/Store/${command}"
         val stringReq = JsonObjectRequest(
             Request.Method.POST, url, jsonObject, { response ->

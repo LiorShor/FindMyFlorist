@@ -13,9 +13,11 @@ import com.findmyflorist.R
 import com.findmyflorist.databinding.FragmentStoreSearchBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.findmyflorist.adapters.StoreAdapter
+import com.findmyflorist.dialogs.Search
 import com.findmyflorist.model.Store
 import com.findmyflorist.remote.StoresRepository
 import com.google.android.gms.maps.model.LatLng
+import com.qandeelabbassi.dropsy.DropDownView
 import kotlin.math.*
 
 class StoreSearch : Fragment() {
@@ -46,6 +48,16 @@ class StoreSearch : Fragment() {
         mStoresList = StoresRepository.getInstance()?.getStoreList!!
         storeAdapter.notifyDataSetChanged()
         mBinding.mapViewFloatingButton.setOnClickListener { mCommunicator.changeFragmentToMapFragment(LatLng(0.0,0.0)) }
+        mBinding.dropdownSearch.setItemClickListener { position, _ ->
+            if (position == 1)
+            {
+                context?.let { Search(it) }
+            }
+            else{
+                StoresRepository.getInstance()?.getUserLocation(requireContext())
+            }
+
+        }
     }
 
     override fun onRequestPermissionsResult(

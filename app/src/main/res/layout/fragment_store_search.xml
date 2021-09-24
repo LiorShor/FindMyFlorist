@@ -4,19 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".fragments.StoreSearch">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+    <com.qandeelabbassi.dropsy.DropDownView
+        android:id="@+id/dropdown_search"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="#85FFFFFF"
-        app:circularflow_radiusInDP="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:dropsyItems="@array/dropdown_items"
+        app:dropsyLabel="Search in:"
+        app:dropsyLabelColor="@color/purple_200"
+        app:dropsySelector="@color/dropsy_selector"
+        app:dropsyValueColor="@color/purple_500"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/storesRecyclerView"
@@ -25,7 +28,7 @@
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintTop_toBottomOf="@+id/dropdown_search" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mapViewFloatingButton"

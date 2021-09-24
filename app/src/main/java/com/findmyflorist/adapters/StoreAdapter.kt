@@ -38,10 +38,10 @@ class StoreAdapter(private val storesList: ArrayList<Store>, private val context
         }
         holder.binding.distanceTextView.text = store.storeDistanceFromUser.toString()
         if(MainActivity.user.fullName == "Hello guest"){
-            holder.binding.favoriteButton.visibility = View.INVISIBLE
+            holder.binding.favoriteButton.isEnabled = false
         }
         else {
-            holder.binding.favoriteButton.visibility = View.VISIBLE
+            holder.binding.favoriteButton.isEnabled = true
             if (store.isFavorite) {
                 holder.binding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
             } else {

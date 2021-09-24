@@ -40,7 +40,7 @@ class StoreDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateFavoriteUIAndDB()
+        updateFavoriteUI()
         mBinding.storeTitle.text = store.storeName
         mBinding.mapView.getMapAsync { googleMap ->
             val coordinates = LatLng(store.Latitude, store.Longitude)
@@ -62,12 +62,14 @@ class StoreDetails : Fragment() {
         }
         mBinding.favoriteButton.setOnClickListener {
             store.isFavorite = !store.isFavorite
-            StoresRepository.getInstance()?.getStoreList?.stream()?.forEach { storeFromStoresList -> if(storeFromStoresList.storeID== store.storeID)
-            {
+            StoresRepository.getInstance()?.getStoreList?.stream()?.forEach { storeFromStoresList ->
+                if (storeFromStoresList.storeID == store.storeID) {
 
-                storeFromStoresList.isFavorite = store.isFavorite
-            }}
-            updateFavoriteUIAndDB()
+                    storeFromStoresList.isFavorite = store.isFavorite
+                }
+            }
+            updateFavoriteUI()
+            updateFavoriteDB()
         }
         mBinding.phoneButton.setOnClickListener {
             if (context?.let { it1 ->
@@ -90,7 +92,17 @@ class StoreDetails : Fragment() {
         mBinding.mapView.onCreate(savedInstanceState)
     }
 
-    private fun updateFavoriteUIAndDB() {
+    private fun updateFavoriteUI() {
+        if (store.isFavorite) {
+
+            mBinding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
+        } else {
+
+            mBinding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)
+        }
+    }
+
+    private fun updateFavoriteDB() {
         if (store.isFavorite) {
             context?.let { it1 ->
                 StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(
@@ -99,8 +111,6 @@ class StoreDetails : Fragment() {
                     "AddStoreToFavorites"
                 )
             }
-
-            mBinding.favoriteButton.setImageResource(R.drawable.ic_in_favorite)
         } else {
             context?.let { it1 ->
                 StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(
@@ -109,7 +119,6 @@ class StoreDetails : Fragment() {
                     "RemoveStoreFromFavorites"
                 )
             }
-            mBinding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)
         }
     }
 
