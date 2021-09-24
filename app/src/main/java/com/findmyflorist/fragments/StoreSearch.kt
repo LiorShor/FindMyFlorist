@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.findmyflorist.adapters.StoreAdapter
 import com.findmyflorist.model.Store
 import com.findmyflorist.remote.StoresRepository
+import com.google.android.gms.maps.model.LatLng
 import kotlin.math.*
 
 class StoreSearch : Fragment() {
@@ -44,6 +45,7 @@ class StoreSearch : Fragment() {
         mBinding.storesRecyclerView.layoutManager = LinearLayoutManager(context)
         mStoresList = StoresRepository.getInstance()?.getStoreList!!
         storeAdapter.notifyDataSetChanged()
+        mBinding.mapViewFloatingButton.setOnClickListener { mCommunicator.changeFragmentToMapFragment(LatLng(0.0,0.0)) }
     }
 
     override fun onRequestPermissionsResult(
