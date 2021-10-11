@@ -9,8 +9,9 @@ import com.findmyflorist.remote.StoresRepository
 
 import android.content.Context
 import android.widget.ImageView
-
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+
 import com.findmyflorist.R
 
 
@@ -47,6 +48,10 @@ class FavoriteStoreAdapter(private val context: Context) : BaseAdapter() {
         }
         shopTitle = convertView!!.findViewById(R.id.shopTitleTextView)
         favoriteImageButton = convertView.findViewById(R.id.favoriteButton)
+        val cardview : CardView = convertView.findViewById(R.id.row)
+        cardview.setOnClickListener {
+            StoresRepository.getInstance()?.fetchStoreDetails(context, mFavoriteStoresList[position].storeID)
+        }
         shopTitle.text = mFavoriteStoresList[position].storeName
         val store = mFavoriteStoresList[position]
         favoriteImageButton.setOnClickListener {

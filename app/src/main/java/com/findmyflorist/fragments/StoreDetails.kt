@@ -89,6 +89,9 @@ class StoreDetails : Fragment() {
                 startActivity(intent)
             }
         }
+        mBinding.backButton.setOnClickListener {
+            communicator.changeFragmentToStoreSearch()
+        }
         mBinding.mapView.onCreate(savedInstanceState)
     }
 

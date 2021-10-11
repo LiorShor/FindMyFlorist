@@ -14,9 +14,9 @@
         android:layout_marginEnd="10dp"
         app:dropsyItems="@array/dropdown_items"
         app:dropsyLabel="Search in:"
-        app:dropsyLabelColor="@color/purple_200"
+        app:dropsyLabelColor="@color/light_green"
         app:dropsySelector="@color/dropsy_selector"
-        app:dropsyValueColor="@color/purple_500"
+        app:dropsyValueColor="@color/deep_green"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

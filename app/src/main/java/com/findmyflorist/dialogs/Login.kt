@@ -96,7 +96,7 @@ class Login(context: Context) : ConstraintLayout(context) {
                
                 user.fullName = "Hello " + response.getString("fullName")
                 val userID = response.getString("userID")
-                StoresRepository.getInstance()?.fetchFavoriteStores(context, userID)
+                StoresRepository.getInstance()?.fetchFavoriteStores(userID)
                 mLoginDialog.dismiss()
 //                    mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
 //                    mBinding.editTextPassword.setHintTextColor(Color.RED)

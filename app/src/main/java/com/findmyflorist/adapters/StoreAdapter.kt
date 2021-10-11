@@ -2,8 +2,8 @@ package com.findmyflorist.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.findmyflorist.fragments.ICommunicator
 import com.findmyflorist.R
@@ -36,7 +36,7 @@ class StoreAdapter(private val storesList: ArrayList<Store>, private val context
         else{
             holder.binding.shopOpenTimeTextView.text = context.getString(R.string.closed)
         }
-        holder.binding.distanceTextView.text = store.storeDistanceFromUser.toString()
+        holder.binding.distanceTextView.text = "${store.storeDistanceFromUser.toString()} Km"
         if(MainActivity.user.fullName == "Hello guest"){
             holder.binding.favoriteButton.isEnabled = false
         }
@@ -52,6 +52,7 @@ class StoreAdapter(private val storesList: ArrayList<Store>, private val context
             StoresRepository.getInstance()?.fetchStoreDetails(context, store.storeID)
         }
         holder.binding.favoriteButton.setOnClickListener {
+
             if (store.isFavorite) {
                 StoresRepository.getInstance()?.addOrRemoveStoreFromFavorite(context, store.storeID,"RemoveStoreFromFavorites")
                 holder.binding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)

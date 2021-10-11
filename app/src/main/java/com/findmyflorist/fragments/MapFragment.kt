@@ -10,6 +10,7 @@ import com.findmyflorist.databinding.FragmentMapBinding
 import com.findmyflorist.model.Store
 import com.findmyflorist.remote.StoresRepository
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -40,9 +41,14 @@ class MapFragment : Fragment() {
                 for (i in 0 until mStoreList.size) {
                     val store = mStoreList[i]
                     val coordinates = LatLng(store.Latitude, store.Longitude)
+                    if(store.isFavorite)
                     googleMap.addMarker(
-                        MarkerOptions().position(coordinates).title(store.storeName)
+                        MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).position(coordinates).title(store.storeName)
                     )
+                    else{
+                        googleMap.addMarker(
+                            MarkerOptions().position(coordinates).title(store.storeName))
+                    }
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 10f))
                     mBinding.mapView.onResume()
                 }
