@@ -12,7 +12,6 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.findmyflorist.CustomJsonArrayRequest
 import com.findmyflorist.activities.MainActivity.Companion.USERID
-import com.findmyflorist.activities.MainActivity.Companion.user
 import com.findmyflorist.fragments.IAdapterListener
 import com.findmyflorist.fragments.ICommunicator
 import com.findmyflorist.fragments.StoreSearch
@@ -36,6 +35,7 @@ class StoresRepository {
     private lateinit var mSelfLocation: SelfLocation
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var requestQueue: RequestQueue
+    private val mIP = "192.168.1.33:45456"
     val getStoreList: ArrayList<Store>?
         get() = mStoresList
 
@@ -91,7 +91,7 @@ class StoresRepository {
         var isExist = false
         for (i in 0 until mFavoriteStoresList!!.size) {
             for (j in 0 until mStoresList!!.size) {
-                if (mStoresList!![j].storeID == mFavoriteStoresList!![i]) {
+                if (mStoresList!![j].equals(mFavoriteStoresList!![i])) {
                     mStoresList!![j].isFavorite = true
                     isExist = true
                 }
@@ -163,6 +163,7 @@ class StoresRepository {
                 }
                 addStoresToDatabase(requestQueue)
                 mCommunicator.changeFragmentToStoreSearch()
+                mCommunicator.stopLottie()
             }, {
                 Log.d("Error", "Could not fetch data from Places API")
             })
@@ -175,7 +176,8 @@ class StoresRepository {
         )
         val json = Gson().toJson(storeAsString)
         val jsonParam = JSONArray(json)
-        val url = "http://192.168.1.20:45455/api/Store/AddNewStoreByID"
+
+        val url = "http://$mIP/api/Store/AddNewStoreByID"
         val stringReq = JsonArrayRequest(
             Request.Method.POST, url, jsonParam, { response ->
                 Log.d("AddStoresToDB", response.toString())
@@ -199,7 +201,6 @@ class StoresRepository {
                 var storeAddress = ""
                 var storePhone = ""
                 var storeIsOpen = "Closed"
-                var storeRating = 0.0
                 try {
                     storePhone = jsonObjectResponse.getString("formatted_phone_number")
                     storeWebsite = jsonObjectResponse.getString("website")
@@ -207,7 +208,6 @@ class StoresRepository {
                     storeIsOpen = if (jsonObjectResponse.getJSONObject("opening_hours")
                             .getBoolean("open_now")
                     ) "Open" else "Closed"
-                    storeRating = jsonObjectResponse.getDouble("rating")
                 } catch (e: Exception) {
                     Log.d("Error", e.toString())
                 }
@@ -238,15 +238,14 @@ class StoresRepository {
         requestQueue?.add(stringReq)
     }
 
-    fun fetchFavoriteStores(context: Context, userID: String) {
+    fun fetchFavoriteStores(userID: String) {
         this.userID = userID
         mFavoriteStoresList = ArrayList()
-        val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
         val params = JSONArray()
         val jsonParam = JSONObject()
         jsonParam.put(USERID, userID)
         params.put(jsonParam)
-        val url = "http://192.168.1.20:45455/api/Store/GetFavoriteStores"
+        val url = "http://$mIP/api/Store/GetFavoriteStores"
         val stringReq = CustomJsonArrayRequest(
             Request.Method.POST, url, jsonParam, { response ->
                 Log.d("VolleySucceedSignIn", response.toString())
@@ -258,7 +257,7 @@ class StoresRepository {
             }, {
                 Log.d("Error", "signIn: check if server is up")
             })
-        requestQueue?.add(stringReq)
+        requestQueue.add(stringReq)
     }
 
     fun addOrRemoveStoreFromFavorite(context: Context, storeID: String, command: String) {
@@ -266,7 +265,7 @@ class StoresRepository {
         val jsonObject = JSONObject()
         jsonObject.put("StoreID", storeID)
         jsonObject.put("UserID", userID)
-        val url = "http://192.168.1.20:45455/api/Store/${command}"
+        val url = "http://$mIP/api/Store/${command}"
         val stringReq = JsonObjectRequest(
             Request.Method.POST, url, jsonObject, { response ->
                 Log.d("VolleySucceedSignIn", response.toString())

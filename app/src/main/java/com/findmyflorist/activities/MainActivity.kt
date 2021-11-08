@@ -1,11 +1,14 @@
 package com.findmyflorist.activities
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -13,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.findmyflorist.fragments.ICommunicator
 import com.findmyflorist.R
@@ -32,8 +36,32 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        StoresRepository.getInstance()?.init(this, applicationContext)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this as Activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    this as Activity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this as Activity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                )
+            }
+        }
         actionBarDrawerConfiguration()
+        Handler(Looper.getMainLooper()).postDelayed({
+            StoresRepository.getInstance()?.init(this, applicationContext)
+
+        }, 3000)
     }
 
     private fun actionBarDrawerConfiguration() {
@@ -80,7 +108,7 @@ class MainActivity : AppCompatActivity(), ICommunicator {
 
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         mToggle.drawerArrowDrawable.color =
-            ContextCompat.getColor(this, R.color.black) //Set the drawer icon to white
+            ContextCompat.getColor(this, R.color.deep_green) //Set the drawer icon to white
         mBinding.drawerLayout.addDrawerListener(mToggle)
         mToggle.syncState()
         mBinding.navView.setNavigationItemSelectedListener {
@@ -89,10 +117,12 @@ class MainActivity : AppCompatActivity(), ICommunicator {
                 R.id.favoriteItem -> {
                     if (user.fullName != "Hello guest") {
                         changeFragmentToFavorites()
-                    }
-                    else
-                    {
-                        Toast.makeText(applicationContext,"Please log in to see your favorite stores",Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(
+                            applicationContext,
+                            "Please log in to see your favorite stores",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
                 R.id.aboutItem -> changeFragmentToAboutUs()
@@ -140,6 +170,10 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         }
         return super.onOptionsItemSelected(item)
 
+    }
+
+    override fun stopLottie() {
+        mBinding.loadingAnimation.visibility = View.INVISIBLE
     }
 
     override fun changeFragmentToMapFragment(latLng: LatLng) {
@@ -202,8 +236,12 @@ class MainActivity : AppCompatActivity(), ICommunicator {
     }
 
     override fun openWebsite(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
+        if(url != "") {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        }
+        else
+            Toast.makeText(this,"This store doesn't have a website",Toast.LENGTH_LONG).show()
     }
 }

@@ -43,7 +43,7 @@ class Register(context: Context) : ConstraintLayout(context) {
         val metrics = resources.displayMetrics
         val width = metrics.widthPixels
         val height = metrics.heightPixels
-        mRegisterDialog.window!!.setLayout(6 * width / 7, 4 * height / 5)
+        mRegisterDialog.window!!.setLayout(6 * width / 7, height)
     }
 
     private fun setOnClickRegisterButton() {

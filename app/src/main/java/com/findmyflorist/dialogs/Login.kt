@@ -89,14 +89,14 @@ class Login(context: Context) : ConstraintLayout(context) {
         userCredentialsJSON.put(EMAIL, emailAddress)
         userCredentialsJSON.put(PASSWORD, password)
         val requestQueue: RequestQueue? = VolleySingleton.getInstance(context)?.requestQueue
-        val url = "http://192.168.1.20:45455/api/User/SignIn"
+        val url = "http://192.168.1.5:45456/api/User/SignIn"
         val stringReq = JsonObjectRequest(
             Request.Method.POST, url, userCredentialsJSON, { response ->
                 Log.d("VolleySucceedSignIn", response.toString())
                
                 user.fullName = "Hello " + response.getString("fullName")
                 val userID = response.getString("userID")
-                StoresRepository.getInstance()?.fetchFavoriteStores(context, userID)
+                StoresRepository.getInstance()?.fetchFavoriteStores(userID)
                 mLoginDialog.dismiss()
 //                    mBinding.editTextEmailAddress.setHintTextColor(Color.RED)
 //                    mBinding.editTextPassword.setHintTextColor(Color.RED)

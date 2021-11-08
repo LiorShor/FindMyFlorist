@@ -7,22 +7,20 @@
     app:cardCornerRadius="12dp"
     android:background="#2C8E8E8E"
     app:cardElevation="3dp"
-    android:padding="5dp"
-    app:contentPadding="4dp">
+    android:layout_margin="5dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#3C22501E"
-        android:padding="5dp">
+        android:layout_margin="5dp">
 
         <TextView
             android:id="@+id/shopTitleTextView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

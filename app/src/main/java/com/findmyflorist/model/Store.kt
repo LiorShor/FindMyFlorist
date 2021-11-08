@@ -13,4 +13,12 @@ class Store(
     val phone: String = "",
     var isFavorite: Boolean = false,
     val website : String = ""
-) : Serializable
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        return this.storeID == other
+    }
+
+    override fun hashCode(): Int {
+        return storeID.hashCode()
+    }
+}

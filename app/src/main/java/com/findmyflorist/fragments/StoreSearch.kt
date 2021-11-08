@@ -14,22 +14,18 @@ import com.findmyflorist.databinding.FragmentStoreSearchBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.findmyflorist.adapters.StoreAdapter
 import com.findmyflorist.dialogs.Search
-import com.findmyflorist.model.Store
 import com.findmyflorist.remote.StoresRepository
 import com.google.android.gms.maps.model.LatLng
-import com.qandeelabbassi.dropsy.DropDownView
 import kotlin.math.*
 
 class StoreSearch : Fragment() {
     private lateinit var mCommunicator: ICommunicator
     private lateinit var mBinding: FragmentStoreSearchBinding
-    private lateinit var mStoresList: ArrayList<Store>
     private lateinit var storeAdapter: StoreAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mStoresList = ArrayList()
         inflater.inflate(R.layout.fragment_store_search, container, false)
         mBinding = FragmentStoreSearchBinding.inflate(inflater, container, false)
         mCommunicator = activity as ICommunicator
@@ -38,25 +34,27 @@ class StoreSearch : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        storeAdapter = StoresRepository.getInstance()?.getStoreList?.let { context?.let { context ->
-            StoreAdapter(it,
-                context
-            )
-        } }!!
+        storeAdapter = StoresRepository.getInstance()?.getStoreList?.let {
+            context?.let { context ->
+                StoreAdapter(
+                    it,
+                    context
+                )
+            }
+        }!!
         mBinding.storesRecyclerView.adapter = storeAdapter
         mBinding.storesRecyclerView.layoutManager = LinearLayoutManager(context)
-        mStoresList = StoresRepository.getInstance()?.getStoreList!!
-        storeAdapter.notifyDataSetChanged()
-        mBinding.mapViewFloatingButton.setOnClickListener { mCommunicator.changeFragmentToMapFragment(LatLng(0.0,0.0)) }
+        mBinding.mapViewFloatingButton.setOnClickListener {
+            mCommunicator.changeFragmentToMapFragment(
+                LatLng(0.0, 0.0)
+            )
+        }
         mBinding.dropdownSearch.setItemClickListener { position, _ ->
-            if (position == 1)
-            {
+            if (position == 1) {
                 context?.let { Search(it) }
-            }
-            else{
+            } else {
                 StoresRepository.getInstance()?.getUserLocation(requireContext())
             }
-
         }
     }
 
@@ -98,7 +96,7 @@ class StoreSearch : Fragment() {
             val c = 2 * atan2(sqrt(a), sqrt(1 - a))
             var distance = AVERAGE_RADIUS_OF_EARTH_KM * c * 1000 // convert to meters
             distance = distance.pow(2.0)
-            return (sqrt(distance) / 1000 * 100.0).roundToInt() / 100.0
+            return (sqrt(distance) / 1000).roundToInt() / 200.0
         }
     }
 }

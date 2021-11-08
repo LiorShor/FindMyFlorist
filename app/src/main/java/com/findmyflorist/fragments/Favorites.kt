@@ -21,14 +21,13 @@ class Favorites : Fragment() {
         return mBinding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val favoriteStoreAdapter = context?.let { FavoriteStoreAdapter(it) }
         mBinding.favoriteGridView.adapter = favoriteStoreAdapter
         mBinding.favoriteGridView.setOnItemClickListener { adapter, _, position, _ ->
             val store = adapter.getItemAtPosition(position) as Store
-            context?.let { StoresRepository.getInstance()?.fetchStoreDetails(it,store.storeID)}
+            context?.let { StoresRepository.getInstance()?.fetchStoreDetails(it, store.storeID) }
         }
     }
 

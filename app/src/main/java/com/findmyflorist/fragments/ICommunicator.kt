@@ -4,6 +4,7 @@ import com.findmyflorist.model.Store
 import com.google.android.gms.maps.model.LatLng
 
 interface ICommunicator {
+    fun stopLottie()
     fun changeFragmentToMapFragment(latLng : LatLng)
     fun changeFragmentToStoreSearch()
     fun changeFragmentToFavorites()

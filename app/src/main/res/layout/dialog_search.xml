@@ -43,7 +43,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/search_for_florists"
                 android:textSize="30sp"
-                android:textColor="@color/purple_500"
+                android:textColor="@color/deep_green"
                 app:layout_constraintBottom_toTopOf="@+id/searchEditText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
