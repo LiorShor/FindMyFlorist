@@ -39,6 +39,7 @@ class StoreAdapter(private val storesList: ArrayList<Store>, private val context
         holder.binding.distanceTextView.text = "${store.storeDistanceFromUser.toString()} Km"
         if(MainActivity.user.fullName == "Hello guest"){
             holder.binding.favoriteButton.isEnabled = false
+            holder.binding.favoriteButton.setImageResource(R.drawable.ic_not_in_favorite)
         }
         else {
             holder.binding.favoriteButton.isEnabled = true

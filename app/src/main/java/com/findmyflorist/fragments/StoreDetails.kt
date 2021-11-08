@@ -1,6 +1,7 @@
 package com.findmyflorist.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,8 +17,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.net.Uri
 import com.findmyflorist.remote.StoresRepository
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 class StoreDetails : Fragment() {
     private lateinit var mBinding: FragmentStoreDetailsBinding
@@ -45,7 +50,7 @@ class StoreDetails : Fragment() {
         mBinding.mapView.getMapAsync { googleMap ->
             val coordinates = LatLng(store.Latitude, store.Longitude)
             googleMap.addMarker(
-                MarkerOptions().position(coordinates).title(store.Address)
+                MarkerOptions().icon(context?.let { bitmapDescriptorFromVector(it,R.drawable.ic_florist) }).position(coordinates).title(store.Address)
             )
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
             googleMap.setOnMapClickListener {
@@ -124,6 +129,13 @@ class StoreDetails : Fragment() {
             }
         }
     }
-
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        return ContextCompat.getDrawable(context, vectorResId)?.run {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            draw(Canvas(bitmap))
+            BitmapDescriptorFactory.fromBitmap(bitmap)
+        }
+    }
     companion object
 }

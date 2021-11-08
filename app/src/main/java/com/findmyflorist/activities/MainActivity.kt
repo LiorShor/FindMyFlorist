@@ -36,6 +36,27 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this as Activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    this as Activity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this as Activity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                )
+            }
+        }
         actionBarDrawerConfiguration()
         Handler(Looper.getMainLooper()).postDelayed({
             StoresRepository.getInstance()?.init(this, applicationContext)

@@ -96,7 +96,7 @@ class StoreSearch : Fragment() {
             val c = 2 * atan2(sqrt(a), sqrt(1 - a))
             var distance = AVERAGE_RADIUS_OF_EARTH_KM * c * 1000 // convert to meters
             distance = distance.pow(2.0)
-            return (sqrt(distance) / 1000).roundToInt() / 100.0
+            return (sqrt(distance) / 1000).roundToInt() / 200.0
         }
     }
 }

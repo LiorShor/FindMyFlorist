@@ -35,7 +35,7 @@ class StoresRepository {
     private lateinit var mSelfLocation: SelfLocation
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var requestQueue: RequestQueue
-    private val mIP = "192.168.1.20:45455"
+    private val mIP = "192.168.1.33:45456"
     val getStoreList: ArrayList<Store>?
         get() = mStoresList
 
